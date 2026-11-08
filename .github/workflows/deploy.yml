@@ -20,8 +20,9 @@ jobs:
 
       - name: Ejecutar scripts SQL de inicialización
         run: |
-          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_database.sql
-          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_tables.sql
-          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_procedure.sql
-          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_trigger.sql
-          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/test_data.sql
+          docker cp sql mssql:/sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_database.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_tables.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_procedure.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_trigger.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/test_data.sql
