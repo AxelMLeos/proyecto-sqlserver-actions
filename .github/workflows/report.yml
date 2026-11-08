@@ -12,22 +12,23 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Iniciar contenedor de SQL Server y cargar datos
-          run: |
-            docker run -e "ACCEPT_EULA=Y" -e "MSSQL_PID=Developer" -e "MSSQL_SA_PASSWORD=${{ secrets.MSSQL_SA_PASSWORD }}" -p 1433:1433 -d --name mssql mcr.microsoft.com/mssql/server:2019-latest
-            sleep 20
-            docker cp sql mssql:/sql
-            docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_database.sql
-            docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_tables.sql
-            docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_procedure.sql
-            docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_trigger.sql
-            docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/test_data.sql
-  
+        run: |
+          docker run -e "ACCEPT_EULA=Y" -e "MSSQL_PID=Developer" -e "MSSQL_SA_PASSWORD=${{ secrets.MSSQL_SA_PASSWORD }}" -p 1433:1433 -d --name mssql mcr.microsoft.com/mssql/server:2019-latest
+          sleep 20
+          docker cp sql mssql:/sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_database.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_tables.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_procedure.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/create_trigger.sql
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i /sql/test_data.sql
+
       - name: Generar CSV
-          run: |
+        run: |
+          docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -s "," -W -i /sql/report_query.sql > reporte_ventas.csv
             docker exec -i mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -s "," -W -i /sql/report_query.sql > reporte_ventas.csv
   
       - name: Subir Artifact
-          uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
             name: Reporte-Ventas-CSV
             path: reporte_ventas.csv
