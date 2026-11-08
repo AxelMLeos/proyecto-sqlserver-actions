@@ -15,11 +15,11 @@ jobs:
         run: |
           docker run -e "ACCEPT_EULA=Y" -e "MSSQL_PID=Developer" -e "MSSQL_SA_PASSWORD=${{ secrets.MSSQL_SA_PASSWORD }}" -p 1433:1433 -d --name mssql mcr.microsoft.com/mssql/server:2019-latest
           sleep 20
-          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/01_create_database.sql
-          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/02_create_tables.sql
-          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/03_create_procedure.sql
-          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/04_create_trigger.sql
-          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/05_test_data.sql
+          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_database.sql
+          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_tables.sql
+          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_procedure.sql
+          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/create_trigger.sql
+          docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${{ secrets.MSSQL_SA_PASSWORD }}" -i - < sql/test_data.sql
 
       - name: Generar CSV
         run: |
